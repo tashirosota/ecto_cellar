@@ -42,7 +42,9 @@ defmodule EctoNote.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:ecto_sql, "~> 3.0"},
+      {:ecto, "~> 3.0"},
     ]
   end
 end
