@@ -1,7 +1,7 @@
 defmodule EctoCellar do
   alias EctoCellar.Version
 
-  def stock(%mod{} = model, id_type \\ :id) do
+  def store(%mod{} = model, id_type \\ :id) do
     Version.create(%{
       model_name: mod,
       model_id: model |> Map.get!(id_type),
@@ -9,7 +9,7 @@ defmodule EctoCellar do
     })
   end
 
-  def stock!(%mod{} = model, id_type \\ :id) do
+  def store!(%mod{} = model, id_type \\ :id) do
     Version.create!(%{
       model_name: mod,
       model_id: model |> Map.get!(id_type),
