@@ -1,15 +1,15 @@
-defmodule EctoNote.MixProject do
+defmodule EctoCellar.MixProject do
   use Mix.Project
-  @source_url "https://github.com/tashirosota/ecto_note"
+  @source_url "https://github.com/tashirosota/ecto_cellar"
   @description "TODO:"
 
   def project do
     [
-      app: :ecto_note,
+      app: :ecto_cellar,
       version: "0.1.0",
       elixir: "~> 1.9",
       description: @description,
-      name: "EctoNote",
+      name: "EctoCellar",
       start_permanent: Mix.env() == :prod,
       package: package(),
       docs: docs(),
@@ -45,6 +45,7 @@ defmodule EctoNote.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:ecto, "~> 3.0"},
+      {:jason, "~> 1.0"}
     ]
   end
 end
