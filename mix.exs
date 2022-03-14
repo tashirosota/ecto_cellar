@@ -42,14 +42,19 @@ defmodule EctoCellar.MixProject do
 
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:ecto, "~> 3.0"},
-      {:jason, "~> 1.0"}
+      {:jason, "~> 1.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:postgrex, "~> 0.15.0 or ~> 1.0", only: [:dev, :test], optional: true},
+      {:myxql, "~> 0.4.0 or ~> 0.5.0", only: [:dev, :test], optional: true}
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(env) when env in [:test, :dev] do
+    ["lib", "support", "config"]
+  end
+
   defp elixirc_paths(_), do: ["lib"]
 end

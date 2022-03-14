@@ -1,7 +1,8 @@
 defmodule Mix.Tasks.EctoCellar.Gen do
   use Mix.Task
   @shortdoc "Generates a new migration file for EctoCellar"
-  @repo Application.compile_env!(:ecto_cellar, :repo)
+  @repo Application.get_env(:ecto_cellar, :repo)
+        |> IO.inspect()
 
   def run(opts \\ []) do
     change = """
@@ -13,7 +14,7 @@ defmodule Mix.Tasks.EctoCellar.Gen do
           timestamps()
         end
 
-        create index(:versions, [:model_name, :module_id])
+        create index(:versions, [:model_name, :model_id])
     """
 
     Mix.Tasks.Ecto.Gen.Migration.run(

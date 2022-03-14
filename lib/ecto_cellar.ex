@@ -4,7 +4,7 @@ defmodule EctoCellar do
   def store(%mod{} = model, id_type \\ :id) do
     Version.create(%{
       model_name: mod,
-      model_id: model |> Map.get!(id_type),
+      model_id: model |> Map.fetch!(id_type),
       version: model |> Jason.encode!()
     })
   end
@@ -12,16 +12,16 @@ defmodule EctoCellar do
   def store!(%mod{} = model, id_type \\ :id) do
     Version.create!(%{
       model_name: mod,
-      model_id: model |> Map.get!(id_type),
+      model_id: model |> Map.fetch!(id_type),
       version: model |> Jason.encode!()
     })
   end
 
   def one(%mod{} = model, timestamp, id_type \\ :id) do
-    Version.all(
+    Version.one(
       mod,
       timestamp,
-      model |> Map.get!(id_type)
+      model |> Map.fetch!(id_type)
     )
     |> to_model(mod)
   end
@@ -29,7 +29,7 @@ defmodule EctoCellar do
   def all(%mod{} = model, id_type \\ :id) do
     Version.all(
       mod,
-      model |> Map.get!(id_type)
+      model |> Map.fetch!(id_type)
     )
     |> to_models(mod)
   end

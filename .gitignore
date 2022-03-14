@@ -24,3 +24,5 @@ ecto_cellar-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+/data/
