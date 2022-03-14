@@ -8,8 +8,8 @@ defmodule EctoCellar.Version do
   @required_fields ~w(model_name model_id version)a
 
   schema "versions" do
-    field(:model_name, :string)
     field(:model_id, :string)
+    field(:model_name, :string)
     field(:version, :string)
     timestamps()
   end
@@ -37,7 +37,7 @@ defmodule EctoCellar.Version do
     __MODULE__
     |> where(model_name: ^model_name)
     |> where(model_id: ^model_id)
-    |> repo.all()
+    |> @repo.all()
   end
 
   def one(model_name, timestamp, model_id) do
@@ -45,6 +45,6 @@ defmodule EctoCellar.Version do
     |> where(model_name: ^model_name)
     |> where(created_at: ^timestamp)
     |> where(model_id: ^model_id)
-    |> repo.one()
+    |> @repo.one()
   end
 end

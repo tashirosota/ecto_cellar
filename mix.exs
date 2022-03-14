@@ -13,6 +13,7 @@ defmodule EctoCellar.MixProject do
       start_permanent: Mix.env() == :prod,
       package: package(),
       docs: docs(),
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       dialyzer: [plt_add_apps: [:mix]]
     ]
@@ -48,4 +49,7 @@ defmodule EctoCellar.MixProject do
       {:jason, "~> 1.0"}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end
