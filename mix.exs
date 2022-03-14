@@ -7,7 +7,7 @@ defmodule EctoCellar.MixProject do
     [
       app: :ecto_cellar,
       version: "0.1.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.10",
       description: @description,
       name: "EctoCellar",
       start_permanent: Mix.env() == :prod,

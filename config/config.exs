@@ -1,5 +1,5 @@
 import Config
 
 unless Mix.env() == :prod do
-  import_config "#{config_env()}.exs"
+  import_config "#{Mix.env()}.exs"
 end
