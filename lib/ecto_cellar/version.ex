@@ -1,4 +1,5 @@
 defmodule EctoCellar.Version do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
@@ -11,13 +12,6 @@ defmodule EctoCellar.Version do
     field(:model_name, :string)
     field(:version, :string)
     timestamps()
-  end
-
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast(params, @required_fields)
-    |> validate_required(@required_fields)
-    |> unique_constraint(:id, name: :PRIMARY)
   end
 
   def create(attr) do
@@ -45,5 +39,12 @@ defmodule EctoCellar.Version do
     |> where(created_at: ^timestamp)
     |> where(model_id: ^model_id)
     |> @repo.one()
+  end
+
+  defp changeset(model, params) do
+    model
+    |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
+    |> unique_constraint(:id, name: :PRIMARY)
   end
 end

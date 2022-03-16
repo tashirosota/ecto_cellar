@@ -2,19 +2,24 @@ defmodule EctoCellar do
   alias EctoCellar.Version
 
   def store(%mod{} = model, id_type \\ :id) do
-    Version.create(%{
-      model_name: mod,
-      model_id: model |> Map.fetch!(id_type),
-      version: model |> Jason.encode!()
-    })
+    case Version.create(%{
+           model_name: mod |> inspect(),
+           model_id: model |> Map.fetch!(id_type) |> inspect(),
+           version: model |> Jason.encode!()
+         }) do
+      {:ok, _} -> {:ok, model}
+      error -> error
+    end
   end
 
   def store!(%mod{} = model, id_type \\ :id) do
     Version.create!(%{
-      model_name: mod,
-      model_id: model |> Map.fetch!(id_type),
+      model_name: mod |> inspect(),
+      model_id: model |> Map.fetch!(id_type) |> inspect(),
       version: model |> Jason.encode!()
     })
+
+    model
   end
 
   def one(%mod{} = model, timestamp, id_type \\ :id) do

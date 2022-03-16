@@ -2,7 +2,6 @@ defmodule Mix.Tasks.EctoCellar.Gen do
   use Mix.Task
   @shortdoc "Generates a new migration file for EctoCellar"
   @repo Application.get_env(:ecto_cellar, :repo)
-        |> IO.inspect()
 
   def run(opts \\ []) do
     change = """

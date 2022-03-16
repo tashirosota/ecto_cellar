@@ -1,2 +1,3 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(Repo, :manual)
+# Postgres.Repo.start_link()
+MyXQL.Repo.start_link()

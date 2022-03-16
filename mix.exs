@@ -52,8 +52,8 @@ defmodule EctoCellar.MixProject do
     ]
   end
 
-  defp elixirc_paths(env) when env in [:test, :dev] do
-    ["lib", "support", "config"]
+  defp elixirc_paths(:test) do
+    ["lib", "test/support"]
   end
 
   defp elixirc_paths(_), do: ["lib"]

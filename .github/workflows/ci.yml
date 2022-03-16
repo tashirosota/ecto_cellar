@@ -31,7 +31,6 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
       - uses: actions/checkout@v2
-      - uses: rrainn/dynamodb-action@v2.0.1
       - run: mix deps.get
       - run: mix compile
       - run: mix dialyzer
@@ -65,7 +64,6 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
       - uses: actions/checkout@v2
-      - uses: rrainn/dynamodb-action@v2.0.1
       - run: mix deps.get
       - run: mix compile
       - run: mix dialyzer
