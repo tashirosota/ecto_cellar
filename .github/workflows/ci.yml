@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MIX_ENV: test
-      ECTO_ADAPTER: postgres
+      DB_ADAPTER: postgres
     services:
       postgres:
         image: postgres:13.4
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MIX_ENV: test
-      ECTO_ADAPTER: mysql
+      DB_ADAPTER: mysql
     services:
       mysql:
         image: mysql:5.7

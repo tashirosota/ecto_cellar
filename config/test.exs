@@ -1,6 +1,6 @@
 import Config
 
-if System.get_env("ECTO_ADAPTER") == "mysql" do
+if System.get_env("DB_ADAPTER") == "mysql" do
   config :ecto_cellar, :repo, MyXQL.Repo
   config :ecto_cellar, ecto_repos: [MyXQL.Repo]
 else
