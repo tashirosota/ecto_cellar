@@ -1,12 +1,16 @@
 defmodule EctoCellar do
   alias EctoCellar.Version
+  @native_datetime_prefix "ecto_cellar_native_datetime_"
 
   @spec store(struct(), atom()) :: {:ok, struct()} | {:error, struct()}
   def store(%mod{} = model, id_type \\ :id) do
+    model_id = if id = Map.fetch!(model, id_type), do: to_string(id)
+
     case Version.create(%{
            model_name: mod |> inspect(),
-           model_id: model |> Map.fetch!(id_type) |> inspect(),
-           version: model |> Jason.encode!()
+           model_id: model_id,
+           model_inserted_at: model.inserted_at,
+           version: model |> cast_format_map |> Jason.encode!()
          }) do
       {:ok, _version} -> {:ok, model}
       error -> error
@@ -15,22 +19,25 @@ defmodule EctoCellar do
 
   @spec store!(struct()) :: struct()
   def store!(%mod{} = model, id_type \\ :id) do
+    model_id = if id = Map.fetch!(model, id_type), do: to_string(id)
+
     _version =
       Version.create!(%{
         model_name: mod |> inspect(),
-        model_id: model |> Map.fetch!(id_type) |> inspect(),
-        version: model |> Jason.encode!()
+        model_id: model_id,
+        model_inserted_at: model.inserted_at,
+        version: model |> cast_format_map |> Jason.encode!()
       })
 
     model
   end
 
-  @spec one(struct(), integer(), any()) :: struct()
+  @spec one(struct(), NaiveDateTime.t(), any()) :: struct()
   def one(%mod{} = model, timestamp, id_type \\ :id) do
     Version.one(
-      mod,
+      mod |> inspect(),
       timestamp,
-      model |> Map.fetch!(id_type)
+      model |> Map.fetch!(id_type) |> to_string()
     )
     |> to_model(mod)
   end
@@ -38,23 +45,52 @@ defmodule EctoCellar do
   @spec all(struct(), any()) :: list(struct())
   def all(%mod{} = model, id_type \\ :id) do
     Version.all(
-      mod,
-      model |> Map.fetch!(id_type)
+      mod |> inspect(),
+      model |> Map.fetch!(id_type) |> to_string()
     )
     |> to_models(mod)
   end
 
-  @spec to_models(list(Version.version()), atom()) :: list(struct())
   defp to_models(versions, mod) do
     versions
     |> Enum.map(&to_model(&1, mod))
   end
 
-  @spec to_model(Version.version(), atom()) :: struct()
   defp to_model(version, mod) do
+    version =
+      Jason.decode!(version.version)
+      |> Enum.map(fn {key, value} ->
+        {
+          key |> String.to_existing_atom(),
+          if(is_stored_native_datetime(value), do: restore_native_datetime(value), else: value)
+        }
+      end)
+
     struct(
       mod.__struct__,
-      Jason.decode!(version.version)
+      version
     )
+  end
+
+  defp cast_format_map(%{} = model) do
+    model
+    |> Map.from_struct()
+    |> Map.drop([:__meta__, :__struct__])
+    |> Enum.map(fn {key, value} ->
+      {key, if(is_native_datetime(value), do: "#{@native_datetime_prefix}#{value}", else: value)}
+    end)
+    |> Map.new()
+  end
+
+  defp is_native_datetime(%NaiveDateTime{}), do: true
+  defp is_native_datetime(_), do: false
+
+  defp is_stored_native_datetime(datetime_str),
+    do: to_string(datetime_str) =~ @native_datetime_prefix
+
+  defp restore_native_datetime(datetime_str) do
+    datetime_str
+    |> String.replace(@native_datetime_prefix, "")
+    |> NaiveDateTime.from_iso8601!()
   end
 end

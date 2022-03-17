@@ -9,7 +9,9 @@ defmodule Mix.Tasks.EctoCellar.Gen do
         create table(:versions) do
           add :model_id, :string, null: false
           add :model_name, :string, null: false
+          add :model_inserted_at, :naive_datetime, null: false
           add :version, :text, null: false
+
           timestamps()
         end
 

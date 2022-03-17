@@ -1,7 +1,6 @@
 defmodule Article do
   use Ecto.Schema
   import Ecto.Changeset
-  @derive {Jason.Encoder, except: [:__meta__, :__struct__]}
   @primary_key {:uuid, :string, []}
 
   schema "articles" do

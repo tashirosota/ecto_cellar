@@ -5,11 +5,12 @@ defmodule EctoCellar.Version do
   import Ecto.Query
 
   @repo Application.get_env(:ecto_cellar, :repo)
-  @required_fields ~w(model_name model_id version)a
+  @required_fields ~w(model_name model_id model_inserted_at version)a
 
   schema "versions" do
     field(:model_id, :string)
     field(:model_name, :string)
+    field(:model_inserted_at, :naive_datetime)
     field(:version, :string)
     timestamps()
   end
@@ -30,7 +31,7 @@ defmodule EctoCellar.Version do
     |> @repo.insert!
   end
 
-  @spec all(atom(), any()) :: list(version)
+  @spec all(String.t(), String.t()) :: list(version)
   def all(model_name, model_id) do
     __MODULE__
     |> where(model_name: ^model_name)
@@ -38,11 +39,11 @@ defmodule EctoCellar.Version do
     |> @repo.all()
   end
 
-  @spec one(atom(), integer(), any()) :: version
-  def one(model_name, timestamp, model_id) do
+  @spec one(String.t(), NaiveDateTime.t(), String.t()) :: version
+  def one(model_name, model_inserted_at, model_id) do
     __MODULE__
     |> where(model_name: ^model_name)
-    |> where(created_at: ^timestamp)
+    |> where(model_inserted_at: ^model_inserted_at)
     |> where(model_id: ^model_id)
     |> @repo.one()
   end
