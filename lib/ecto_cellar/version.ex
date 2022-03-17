@@ -14,18 +14,23 @@ defmodule EctoCellar.Version do
     timestamps()
   end
 
+  @type version :: %__MODULE__{}
+
+  @spec create(map()) :: {:ok, version} | {:error, term()}
   def create(attr) do
     %__MODULE__{}
     |> changeset(attr)
     |> @repo.insert
   end
 
+  @spec create!(map()) :: {:ok, version}
   def create!(attr) do
     %__MODULE__{}
     |> changeset(attr)
     |> @repo.insert!
   end
 
+  @spec all(atom(), any()) :: list(version)
   def all(model_name, model_id) do
     __MODULE__
     |> where(model_name: ^model_name)
@@ -33,6 +38,7 @@ defmodule EctoCellar.Version do
     |> @repo.all()
   end
 
+  @spec one(atom(), integer(), any()) :: version
   def one(model_name, timestamp, model_id) do
     __MODULE__
     |> where(model_name: ^model_name)

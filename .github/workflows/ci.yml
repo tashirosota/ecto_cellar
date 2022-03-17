@@ -34,11 +34,12 @@ jobs:
       - run: mix deps.get
       - run: mix compile
       - run: mix dialyzer
+        if: matrix.elixir == '1.13.3'
+      - run: mix format --check-formatted
+        if: matrix.elixir == '1.13.3'
       - run: mix ecto_cellar.gen
       - run: mix ecto.create
       - run: mix ecto.migrate
-      - run: mix format --check-formatted
-        if: matrix.elixir == '1.13.3'
       - run: mix test
 
   test_mysql:
