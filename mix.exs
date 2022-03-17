@@ -1,7 +1,7 @@
 defmodule EctoCellar.MixProject do
   use Mix.Project
   @source_url "https://github.com/tashirosota/ecto_cellar"
-  @description "TODO:"
+  @description "Store changes to your models, for auditing or versioning."
 
   def project do
     [
