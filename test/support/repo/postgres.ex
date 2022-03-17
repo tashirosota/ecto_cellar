@@ -10,7 +10,9 @@ defmodule Postgres.Repo do
        password: "postgres",
        database: "ecto_cellar_postgres_test",
        hostname: "localhost",
-       pool: Ecto.Adapters.SQL.Sandbox
+       pool: Ecto.Adapters.SQL.Sandbox,
+       show_sensitive_data_on_connection_error: true,
+       pool_size: 10
      )}
   end
 end
