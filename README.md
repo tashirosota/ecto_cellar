@@ -33,7 +33,7 @@ end
 Add ecto_cellar congigure to your config.exs.
 
 ```elixir
-config :ecto_cellar, :repo, [YourApp.Repo]
+config :ecto_cellar, :repo, YourApp.Repo
 ```
 
 ### 2. Creates versions table.
