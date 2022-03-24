@@ -7,7 +7,7 @@
 # EctoCellar
 
 **Store changes to your models, for auditing or versioning.**
-Inspred by [paper_trail](https://github.com/paper-trail-gem/paper_trail).
+Inspired by [paper_trail](https://github.com/paper-trail-gem/paper_trail).
 
 ## Documentation
 
@@ -44,7 +44,7 @@ And migrate by `mix ecto.migrate`.
 
 ### 3. Stores changes to model.
 
-Stores after model changed or created.
+Stores after a model is changed or created.
 These are stored as recoverable versions for the versions table
 
 ```elixir
