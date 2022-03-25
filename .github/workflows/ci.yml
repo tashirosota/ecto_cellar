@@ -32,7 +32,7 @@ jobs:
           elixir-version: ${{matrix.elixir}}
       - uses: actions/checkout@v2
       - run: mix deps.get
-      - run: mix compile
+      - run: mix compile --warnings-as-errors
       - run: mix dialyzer
         if: matrix.elixir == '1.13.3'
       - run: mix format --check-formatted

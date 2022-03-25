@@ -4,7 +4,7 @@ defmodule EctoCellar.Version do
   import Ecto.Changeset
   import Ecto.Query
 
-  @repo Application.get_env(:ecto_cellar, :repo)
+  @repo Application.compile_env!(:ecto_cellar, :repo)
   @required_fields ~w(model_name model_id model_inserted_at version)a
 
   schema "versions" do
