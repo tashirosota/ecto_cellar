@@ -4,7 +4,6 @@ defmodule EctoCellar.Version do
   import Ecto.Changeset
   import Ecto.Query
 
-  @repo Application.compile_env!(:ecto_cellar, :repo)
   @required_fields ~w(model_name model_id model_inserted_at version)a
 
   schema "versions" do
@@ -21,14 +20,14 @@ defmodule EctoCellar.Version do
   def create(attr) do
     %__MODULE__{}
     |> changeset(attr)
-    |> @repo.insert
+    |> EctoCellar.repo().insert
   end
 
   @spec create!(map()) :: {:ok, version}
   def create!(attr) do
     %__MODULE__{}
     |> changeset(attr)
-    |> @repo.insert!
+    |> EctoCellar.repo().insert!
   end
 
   @spec all(String.t(), String.t()) :: list(version)
@@ -36,7 +35,7 @@ defmodule EctoCellar.Version do
     __MODULE__
     |> where(model_name: ^model_name)
     |> where(model_id: ^model_id)
-    |> @repo.all()
+    |> EctoCellar.repo().all()
   end
 
   @spec one(String.t(), NaiveDateTime.t(), String.t()) :: version
@@ -45,7 +44,7 @@ defmodule EctoCellar.Version do
     |> where(model_name: ^model_name)
     |> where(model_inserted_at: ^model_inserted_at)
     |> where(model_id: ^model_id)
-    |> @repo.one()
+    |> EctoCellar.repo().one()
   end
 
   defp changeset(model, params) do

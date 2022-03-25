@@ -70,6 +70,8 @@ defmodule EctoCellar do
     |> to_models(mod)
   end
 
+  def repo, do: Application.get_env(:ecto_cellar, :repo)
+
   defp to_models(versions, mod) do
     versions
     |> Enum.map(&to_model(&1, mod))

@@ -1,7 +1,6 @@
 defmodule Mix.Tasks.EctoCellar.Gen do
   use Mix.Task
   @shortdoc "Generates a new migration file for EctoCellar"
-  @repo Application.compile_env!(:ecto_cellar, :repo)
 
   def run(opts \\ []) do
     change = """
@@ -19,7 +18,7 @@ defmodule Mix.Tasks.EctoCellar.Gen do
     """
 
     Mix.Tasks.Ecto.Gen.Migration.run(
-      ["-r", to_string(@repo), "create_version_tables", "--change", change] ++ opts
+      ["-r", to_string(EctoCellar.repo()), "create_version_tables", "--change", change] ++ opts
     )
   end
 end
