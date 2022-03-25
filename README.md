@@ -21,7 +21,7 @@ by adding `ecto_cellar` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ecto_cellar, "~> 0.1.0"}
+    {:ecto_cellar, "~> 0.1"}
   ]
 end
 ```
