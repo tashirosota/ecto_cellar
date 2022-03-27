@@ -30,7 +30,7 @@ end
 
 ### 1. Configuration.
 
-Add ecto_cellar congigure to your config.exs.
+Add ecto_cellar configure to your config.exs.
 
 ```elixir
 config :ecto_cellar, :repo, YourApp.Repo
