@@ -98,4 +98,27 @@ defmodule EctoCellarTest do
       assert {:ok, _} = restored |> Article.changeset(%{}) |> @repo.update()
     end
   end
+
+  describe "only versions non-virtual field names" do
+    setup ctx do
+      {:ok, comment} =
+        %PostComment{content: "a comment", post_id: ctx.post.id, virtual: "not versioned"}
+        |> @repo.insert()
+
+      [comment: comment]
+    end
+
+    test "store does not cause Jason RuntimeError with associated fields", %{comment: comment} do
+      {:ok, _} = EctoCellar.store(comment)
+    end
+
+    test "stored version does not include associated or virtual fields", %{comment: comment} do
+      %PostComment{post: %Post{}} = preloaded = @repo.preload(comment, :post)
+
+      %PostComment{} = EctoCellar.store!(preloaded)
+
+      %PostComment{post: %Ecto.Association.NotLoaded{}, virtual: nil} =
+        EctoCellar.one(preloaded, preloaded.inserted_at)
+    end
+  end
 end
