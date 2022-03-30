@@ -1,6 +1,10 @@
 <!-- @format -->
 
-## v0.3.0（next version）
+## v0.4.0
+
+- [Add `insert_and_store/3`, `update_and_store/3` and `insert_or_update_and_store/3`](https://github.com/tashirosota/ecto_cellar/pull/11)
+
+## v0.3.0
 
 - [Only store non-virtual schema fields in version.](https://github.com/tashirosota/ecto_cellar/pull/9) by [@03juan](https://github.com/03juan)
 - [Change last arg to opts](https://github.com/tashirosota/ecto_cellar/pull/10)

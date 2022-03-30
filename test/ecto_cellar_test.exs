@@ -3,7 +3,7 @@ defmodule EctoCellarTest do
   # use DataCase
   @repo Application.get_env(:ecto_cellar, :default_repo)
   setup do
-    {:ok, post} = %Post{title: "title", views: 0} |> @repo.insert()
+    {:ok, post} = %Post{title: "title", views: 0} |> Post.changeset(%{}) |> @repo.insert()
 
     {:ok, article} =
       %Article{uuid: Ecto.UUID.generate(), title: "title", views: 0} |> @repo.insert()
@@ -52,6 +52,69 @@ defmodule EctoCellarTest do
                    fn ->
                      EctoCellar.store!(article |> Map.put(:uuid, nil), :uuid)
                    end
+    end
+  end
+
+  describe "insert_and_store/3" do
+    setup do
+      [
+        post: %Post{title: "title", views: 0},
+        article: %Article{uuid: Ecto.UUID.generate(), title: "title", views: 0}
+      ]
+    end
+
+    test "return {:ok, model}", %{post: post, article: article} do
+      assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.insert_and_store(post)
+
+      assert {:ok, %Article{title: "title", views: 0}} =
+               EctoCellar.insert_and_store(article, id_type: :uuid)
+    end
+  end
+
+  describe "update_and_store/3" do
+    setup do
+      {:ok, post} = %Post{title: "title", views: 0} |> @repo.insert()
+
+      {:ok, article} =
+        %Article{uuid: Ecto.UUID.generate(), title: "title", views: 0} |> @repo.insert()
+
+      [
+        post: post |> Map.put(:views, 1) |> Post.changeset(%{}),
+        article: article |> Map.put(:views, 1) |> Article.changeset(%{})
+      ]
+    end
+
+    test "return {:ok, model}", %{post: post, article: article} do
+      assert {:ok, %Post{title: "title", views: 1}} = EctoCellar.update_and_store(post)
+
+      assert {:ok, %Article{title: "title", views: 1}} =
+               EctoCellar.update_and_store(article, id_type: :uuid)
+    end
+  end
+
+  describe "insert_or_update_and_store/3" do
+    setup do
+      [
+        post: %Post{title: "title", views: 0} |> Post.changeset(%{}),
+        article:
+          %Article{uuid: Ecto.UUID.generate(), title: "title", views: 0} |> Article.changeset(%{})
+      ]
+    end
+
+    test "return {:ok, model}", %{post: post, article: article} do
+      assert {:ok, %Post{title: "title", views: 0} = post} =
+               EctoCellar.insert_or_update_and_store(post)
+
+      assert {:ok, %Post{title: "title", views: 1} = post} =
+               post |> Post.changeset(%{views: 1}) |> EctoCellar.insert_or_update_and_store()
+
+      assert {:ok, %Article{title: "title", views: 0} = article} =
+               EctoCellar.insert_or_update_and_store(article, id_type: :uuid)
+
+      assert {:ok, %Article{title: "title", views: 1} = article} =
+               article
+               |> Article.changeset(%{views: 1})
+               |> EctoCellar.insert_or_update_and_store(id_type: :uuid)
     end
   end
 

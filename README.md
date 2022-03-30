@@ -45,12 +45,26 @@ And migrate by `mix ecto.migrate`.
 ### 3. Stores changes to model.
 
 Stores after a model is changed or created.
-These are stored as recoverable versions for the versions table
+These are stored as recoverable versions for the versions table.
+
+**By `Repo.insert` + `EctoCellar.store/2`.**
 
 ```elixir
 iex> with {:ok, post} <- %Post{title: "title", views: 0} |> @repo.insert(),
 iex>      {:ok, _post} <- EctoCellar.store(post) do # or store!/2
 iex>   # do something
+iex> end
+```
+
+or
+
+**By `EctoCellar.insert_and_store/2`.**
+（Uses `EctoCellar.update_and_store/2` when updated.）
+
+```elixir
+iex> case EctoCellar.insert_and_store(post) do # or store!/2
+iex>   {:ok, _post} -> # do_somesing
+iex>   error -> error
 iex> end
 ```
 
