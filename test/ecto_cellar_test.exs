@@ -13,24 +13,24 @@ defmodule EctoCellarTest do
 
   describe "store/2" do
     test "return {:ok, model}", %{post: post, article: article} do
-      {:ok, %Post{title: "title", views: 0}} = EctoCellar.store(post)
-      {:ok, %Article{title: "title", views: 0}} = EctoCellar.store(article, :uuid)
+      assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.store(post)
+      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.store(article, :uuid)
     end
 
     test "return {:error, term}", %{post: post, article: article} do
-      {:error, %{errors: [model_id: {"can't be blank", [validation: :required]}]}} =
-        EctoCellar.store(post |> Map.put(:id, nil))
+      assert {:error, %{errors: [model_id: {"can't be blank", [validation: :required]}]}} =
+               EctoCellar.store(post |> Map.put(:id, nil))
 
-      {:error, %{errors: [model_id: {"can't be blank", [validation: :required]}]}} =
-        EctoCellar.store(article |> Map.put(:uuid, nil), :uuid)
+      assert {:error, %{errors: [model_id: {"can't be blank", [validation: :required]}]}} =
+               EctoCellar.store(article |> Map.put(:uuid, nil), :uuid)
     end
   end
 
   describe "store!/2" do
     test "return {:ok, model}", %{post: post, article: article} do
-      %Post{title: "title", views: 0} = EctoCellar.store!(post)
+      assert %Post{title: "title", views: 0} = EctoCellar.store!(post)
 
-      %Article{title: "title", views: 0} = EctoCellar.store!(article, :uuid)
+      assert %Article{title: "title", views: 0} = EctoCellar.store!(article, :uuid)
     end
 
     test "raise Ecto.InvalidChangesetError", %{post: post, article: article} do
@@ -109,7 +109,7 @@ defmodule EctoCellarTest do
     end
 
     test "store does not cause Jason RuntimeError with associated fields", %{comment: comment} do
-      assert {:error, _} = EctoCellar.store(comment)
+      assert {:ok, _} = EctoCellar.store(comment)
     end
 
     test "stored version does not include associated or virtual fields", %{comment: comment} do

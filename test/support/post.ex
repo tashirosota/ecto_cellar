@@ -5,7 +5,7 @@ defmodule Post do
   schema "posts" do
     field(:title, :string)
     field(:views, :integer)
-
+    has_many(:comments, PostComment)
     timestamps()
   end
 
