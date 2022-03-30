@@ -11,7 +11,7 @@ Inspired by [paper_trail](https://github.com/paper-trail-gem/paper_trail).
 
 ## Documentation
 
-This is the user guide. See also, the [API reference](https://hexdocs.pm/ecto_cella).
+This is the user guide. See also, the [API reference](https://hexdocs.pm/ecto_cellar).
 
 ## Installation
 
