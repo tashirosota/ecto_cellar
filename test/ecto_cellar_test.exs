@@ -109,16 +109,16 @@ defmodule EctoCellarTest do
     end
 
     test "store does not cause Jason RuntimeError with associated fields", %{comment: comment} do
-      {:ok, _} = EctoCellar.store(comment)
+      assert {:error, _} = EctoCellar.store(comment)
     end
 
     test "stored version does not include associated or virtual fields", %{comment: comment} do
-      %PostComment{post: %Post{}} = preloaded = @repo.preload(comment, :post)
+      assert %PostComment{post: %Post{}} = preloaded = @repo.preload(comment, :post)
 
-      %PostComment{} = EctoCellar.store!(preloaded)
+      assert %PostComment{} = EctoCellar.store!(preloaded)
 
-      %PostComment{post: %Ecto.Association.NotLoaded{}, virtual: nil} =
-        EctoCellar.one(preloaded, preloaded.inserted_at)
+      assert %PostComment{post: %Ecto.Association.NotLoaded{}, virtual: nil} =
+               EctoCellar.one(preloaded, preloaded.inserted_at)
     end
   end
 end
