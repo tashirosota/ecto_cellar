@@ -6,7 +6,7 @@ defmodule EctoCellar do
   For a model whose primary_key is other than `id`, specify `id_type` and use it.
 
   ## Options
-   - repo:　You can select a repo other than the one specified in Config.
+   - repo: You can select a repo other than the one specified in Config.
    - id_type: If the primary key is other than `id`, specify it.
   """
 

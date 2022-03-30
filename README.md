@@ -21,7 +21,7 @@ by adding `ecto_cellar` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ecto_cellar, "~> 0.1"}
+    {:ecto_cellar, "~> 0.3"}
   ]
 end
 ```
@@ -74,6 +74,13 @@ iex> post_version1
 iex> |> Post.changeset([])
 iex> |> Repo.update() # Restored！！！
 ```
+
+### Options
+
+**The last argument of each function accepts the following options.**
+
+- repo: You can select a repo other than the one specified in Config.
+- id_type: If the primary key is other than `id`, specify it.
 
 ## For contributers
 
