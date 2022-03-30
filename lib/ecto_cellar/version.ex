@@ -16,35 +16,35 @@ defmodule EctoCellar.Version do
 
   @type version :: %__MODULE__{}
 
-  @spec create(map()) :: {:ok, version} | {:error, term()}
-  def create(attr) do
+  @spec create(map(), module()) :: {:ok, version} | {:error, term()}
+  def create(attr, repo) do
     %__MODULE__{}
     |> changeset(attr)
-    |> EctoCellar.repo().insert
+    |> repo.insert
   end
 
-  @spec create!(map()) :: {:ok, version}
-  def create!(attr) do
+  @spec create!(map(), module()) :: {:ok, version}
+  def create!(attr, repo) do
     %__MODULE__{}
     |> changeset(attr)
-    |> EctoCellar.repo().insert!
+    |> repo.insert!
   end
 
-  @spec all(String.t(), String.t()) :: list(version)
-  def all(model_name, model_id) do
+  @spec all(String.t(), String.t(), module()) :: list(version)
+  def all(model_name, model_id, repo) do
     __MODULE__
     |> where(model_name: ^model_name)
     |> where(model_id: ^model_id)
-    |> EctoCellar.repo().all()
+    |> repo.all()
   end
 
-  @spec one(String.t(), NaiveDateTime.t(), String.t()) :: version
-  def one(model_name, model_inserted_at, model_id) do
+  @spec one(String.t(), NaiveDateTime.t(), String.t(), module()) :: version
+  def one(model_name, model_inserted_at, model_id, repo) do
     __MODULE__
     |> where(model_name: ^model_name)
     |> where(model_inserted_at: ^model_inserted_at)
     |> where(model_id: ^model_id)
-    |> EctoCellar.repo().one()
+    |> repo.one()
   end
 
   defp changeset(model, params) do

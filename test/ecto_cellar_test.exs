@@ -1,7 +1,7 @@
 defmodule EctoCellarTest do
   use ExUnit.Case
   # use DataCase
-  @repo Application.get_env(:ecto_cellar, :repo)
+  @repo Application.get_env(:ecto_cellar, :default_repo)
   setup do
     {:ok, post} = %Post{title: "title", views: 0} |> @repo.insert()
 
@@ -15,6 +15,7 @@ defmodule EctoCellarTest do
     test "return {:ok, model}", %{post: post, article: article} do
       assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.store(post)
       assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.store(article, :uuid)
+      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.store(article, id_type: :uuid)
     end
 
     test "return {:error, term}", %{post: post, article: article} do
@@ -23,6 +24,14 @@ defmodule EctoCellarTest do
 
       assert {:error, %{errors: [model_id: {"can't be blank", [validation: :required]}]}} =
                EctoCellar.store(article |> Map.put(:uuid, nil), :uuid)
+    end
+
+    test "can pass othre repo", %{post: post} do
+      assert_raise UndefinedFunctionError,
+                   "function :dummy.insert/1 is undefined (module :dummy is not available)",
+                   fn ->
+                     EctoCellar.store(post, repo: :dummy)
+                   end
     end
   end
 
@@ -58,12 +67,18 @@ defmodule EctoCellarTest do
         {:ok, _} = EctoCellar.store(ctx[:article], :uuid)
       end)
 
+      0..10
+      |> Enum.each(fn _ ->
+        {:ok, _} = EctoCellar.store(ctx[:article], id_type: :uuid)
+      end)
+
       :ok
     end
 
     test "return models", %{post: post, article: article} do
       assert EctoCellar.all(post) |> Enum.count() >= 10
       assert EctoCellar.all(article, :uuid) |> Enum.count() >= 10
+      assert EctoCellar.all(article, id_type: :uuid) |> Enum.count() >= 10
     end
   end
 
@@ -94,7 +109,11 @@ defmodule EctoCellarTest do
         updated_at: article.updated_at
       }
 
-      assert ^expected_article = restored = EctoCellar.one(article, article.inserted_at, :uuid)
+      assert ^expected_article = EctoCellar.one(article, article.inserted_at, :uuid)
+
+      assert ^expected_article =
+               restored = EctoCellar.one(article, article.inserted_at, id_type: :uuid)
+
       assert {:ok, _} = restored |> Article.changeset(%{}) |> @repo.update()
     end
   end
