@@ -4,24 +4,32 @@ defmodule EctoCellar do
   Handles versions table created by `mix ecto_cellar.gen`.
   You can use this module to store in the cellar and restore the version.
   For a model whose primary_key is other than `id`, specify `id_type` and use it.
+
+  ## Options
+   - repo:　You can select a repo other than the one specified in Config.
+   - id_type: If the primary key is other than `id`, specify it.
   """
 
   alias(EctoCellar.Version)
   @native_datetime_prefix "ecto_cellar_native_datetime_"
+  @type options :: [id_type: atom(), repo: module()]
 
   @doc """
   Stores the changes at that time in the cellar.
   """
-  @spec store(struct(), atom()) :: {:ok, struct()} | {:error, struct()}
-  def store(%mod{} = model, id_type \\ :id) do
-    model_id = if id = Map.fetch!(model, id_type), do: to_string(id)
+  @spec store(struct(), options) :: {:ok, struct()} | {:error, struct()}
+  def store(%mod{} = model, opts \\ []) do
+    model_id = if id = Map.fetch!(model, id_type(opts)), do: to_string(id)
 
-    case Version.create(%{
-           model_name: mod |> inspect(),
-           model_id: model_id,
-           model_inserted_at: model.inserted_at,
-           version: model |> cast_format_map |> Jason.encode!()
-         }) do
+    case Version.create(
+           %{
+             model_name: mod |> inspect(),
+             model_id: model_id,
+             model_inserted_at: model.inserted_at,
+             version: model |> cast_format_map |> Jason.encode!()
+           },
+           repo(opts)
+         ) do
       {:ok, _version} -> {:ok, model}
       error -> error
     end
@@ -30,17 +38,20 @@ defmodule EctoCellar do
   @doc """
   Like store/2, except that if the record is invalid, raises an exception.
   """
-  @spec store!(struct()) :: struct()
-  def store!(%mod{} = model, id_type \\ :id) do
-    model_id = if id = Map.fetch!(model, id_type), do: to_string(id)
+  @spec store!(struct(), options) :: struct()
+  def store!(%mod{} = model, opts \\ []) do
+    model_id = if id = Map.fetch!(model, id_type(opts)), do: to_string(id)
 
     _version =
-      Version.create!(%{
-        model_name: mod |> inspect(),
-        model_id: model_id,
-        model_inserted_at: model.inserted_at,
-        version: model |> cast_format_map |> Jason.encode!()
-      })
+      Version.create!(
+        %{
+          model_name: mod |> inspect(),
+          model_id: model_id,
+          model_inserted_at: model.inserted_at,
+          version: model |> cast_format_map |> Jason.encode!()
+        },
+        repo(opts)
+      )
 
     model
   end
@@ -48,12 +59,13 @@ defmodule EctoCellar do
   @doc """
   Returns a specific version of model from the cellar.
   """
-  @spec one(struct(), NaiveDateTime.t(), any()) :: struct()
-  def one(%mod{} = model, timestamp, id_type \\ :id) do
+  @spec one(struct(), NaiveDateTime.t(), options) :: struct()
+  def one(%mod{} = model, timestamp, opts \\ []) do
     Version.one(
       mod |> inspect(),
       timestamp,
-      model |> Map.fetch!(id_type) |> to_string()
+      model |> Map.fetch!(id_type(opts)) |> to_string(),
+      repo(opts)
     )
     |> to_model(mod)
   end
@@ -61,16 +73,25 @@ defmodule EctoCellar do
   @doc """
   Returns all versions of model from the cellar.
   """
-  @spec all(struct(), any()) :: list(struct())
-  def all(%mod{} = model, id_type \\ :id) do
+  @spec all(struct(), options) :: list(struct())
+  def all(%mod{} = model, opts \\ []) do
     Version.all(
       mod |> inspect(),
-      model |> Map.fetch!(id_type) |> to_string()
+      model |> Map.fetch!(id_type(opts)) |> to_string(),
+      repo(opts)
     )
     |> to_models(mod)
   end
 
-  def repo, do: Application.get_env(:ecto_cellar, :repo)
+  def repo,
+    do:
+      Application.get_env(:ecto_cellar, :default_repo) || Application.get_env(:ecto_cellar, :repo)
+
+  defp id_type(opts) when is_list(opts), do: opts[:id_type] || :id
+  defp id_type(opts), do: opts
+
+  defp repo(opts) when is_list(opts), do: opts[:repo] || EctoCellar.repo()
+  defp repo(_), do: EctoCellar.repo()
 
   defp to_models(versions, mod) do
     versions
