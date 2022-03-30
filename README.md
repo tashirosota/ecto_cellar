@@ -75,6 +75,13 @@ iex> |> Post.changeset([])
 iex> |> Repo.update() # Restored！！！
 ```
 
+## For contributers
+
+You can test locally in these steps.
+
+1. `make setup`
+2. `mix test`
+
 ## Bugs and Feature requests
 
 Feel free to open an issues or a PR to contribute to the project.
