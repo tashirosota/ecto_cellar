@@ -6,7 +6,7 @@ defmodule EctoCellar do
   For a model whose primary_key is other than `id`, specify `id_type` and use it.
   """
 
-  alias EctoCellar.Version
+  alias(EctoCellar.Version)
   @native_datetime_prefix "ecto_cellar_native_datetime_"
 
   @doc """
@@ -93,18 +93,17 @@ defmodule EctoCellar do
     )
   end
 
-  defp cast_format_map(%{} = model) do
-    model
-    |> Map.from_struct()
-    |> Map.drop([:__meta__, :__struct__])
-    |> Enum.map(fn {key, value} ->
-      {key, if(is_native_datetime(value), do: "#{@native_datetime_prefix}#{value}", else: value)}
-    end)
-    |> Map.new()
+  defp cast_format_map(%{__meta__: %{schema: schema}} = model) do
+    for field <- schema.__schema__(:fields),
+        into: %{} do
+      {field, maybe_encode_native_datetime(Map.get(model, field))}
+    end
   end
 
-  defp is_native_datetime(%NaiveDateTime{}), do: true
-  defp is_native_datetime(_), do: false
+  defp maybe_encode_native_datetime(%NaiveDateTime{} = value),
+    do: "#{@native_datetime_prefix}#{value}"
+
+  defp maybe_encode_native_datetime(value), do: value
 
   defp is_stored_native_datetime(datetime_str),
     do: to_string(datetime_str) =~ @native_datetime_prefix
