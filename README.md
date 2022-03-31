@@ -58,13 +58,13 @@ iex> with {:ok, post} <- %Post{title: "title", views: 0} |> @repo.insert(),
 
 or
 
-There is also a function that wraps `EctoRepo.insert`, `update` and `insert_or_update`.
+There is also a function that wraps `EctoRepo.insert`, `update`, `insert_or_update` and `delete`.
 
-**By `EctoCellar.insert_store/2`.**
-（Uses `EctoCellar.update_store/2` when updated.）
+**By `EctoCellar.insert_store/3`.**
+（Uses `EctoCellar.update_store/3` when updated.）
 
 ```elixir
-iex> case EctoCellar.insert_store(post) do # or insert_store/2, upsert_store/2
+iex> case EctoCellar.insert_store(post) do # or update_store/3, upsert_store/3, delete_store/3
 ...>   {:ok, _post} -> # do_somesing
 ...>   error -> error
 ...> end

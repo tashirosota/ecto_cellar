@@ -115,6 +115,25 @@ defmodule EctoCellarTest do
     end
   end
 
+  describe "delete_store/3" do
+    setup do
+      {:ok, post} = %Post{title: "title", views: 0} |> @repo.insert()
+
+      {:ok, article} =
+        %Article{uuid: Ecto.UUID.generate(), title: "title", views: 0} |> @repo.insert()
+
+      [post: post, article: article]
+    end
+
+    test "return {:ok, model}", %{post: post, article: article} do
+      assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.delete_store(post)
+      refute @repo.get(Post, post.id)
+
+      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.delete_store(article)
+      refute @repo.get(Article, article.uuid)
+    end
+  end
+
   describe "all/2" do
     setup ctx do
       0..10
