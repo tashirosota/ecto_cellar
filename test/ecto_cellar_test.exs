@@ -55,7 +55,7 @@ defmodule EctoCellarTest do
     end
   end
 
-  describe "insert_and_store/3" do
+  describe "insert_store/3" do
     setup do
       [
         post: %Post{title: "title", views: 0},
@@ -64,13 +64,13 @@ defmodule EctoCellarTest do
     end
 
     test "return {:ok, model}", %{post: post, article: article} do
-      assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.insert_and_store(post)
+      assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.insert_store(post)
 
-      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.insert_and_store(article)
+      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.insert_store(article)
     end
   end
 
-  describe "update_and_store/3" do
+  describe "update_store/3" do
     setup do
       {:ok, post} = %Post{title: "title", views: 0} |> @repo.insert()
 
@@ -84,13 +84,13 @@ defmodule EctoCellarTest do
     end
 
     test "return {:ok, model}", %{post: post, article: article} do
-      assert {:ok, %Post{title: "title", views: 1}} = EctoCellar.update_and_store(post)
+      assert {:ok, %Post{title: "title", views: 1}} = EctoCellar.update_store(post)
 
-      assert {:ok, %Article{title: "title", views: 1}} = EctoCellar.update_and_store(article)
+      assert {:ok, %Article{title: "title", views: 1}} = EctoCellar.update_store(article)
     end
   end
 
-  describe "insert_or_update_and_store/3" do
+  describe "upsert_store/3" do
     setup do
       [
         post: %Post{title: "title", views: 0} |> Post.changeset(%{}),
@@ -100,19 +100,18 @@ defmodule EctoCellarTest do
     end
 
     test "return {:ok, model}", %{post: post, article: article} do
-      assert {:ok, %Post{title: "title", views: 0} = post} =
-               EctoCellar.insert_or_update_and_store(post)
+      assert {:ok, %Post{title: "title", views: 0} = post} = EctoCellar.upsert_store(post)
 
       assert {:ok, %Post{title: "title", views: 1}} =
-               post |> Post.changeset(%{views: 1}) |> EctoCellar.insert_or_update_and_store()
+               post |> Post.changeset(%{views: 1}) |> EctoCellar.upsert_store()
 
       assert {:ok, %Article{title: "title", views: 0} = article} =
-               EctoCellar.insert_or_update_and_store(article)
+               EctoCellar.upsert_store(article)
 
       assert {:ok, %Article{title: "title", views: 1}} =
                article
                |> Article.changeset(%{views: 1})
-               |> EctoCellar.insert_or_update_and_store()
+               |> EctoCellar.upsert_store()
     end
   end
 

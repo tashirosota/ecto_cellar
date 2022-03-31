@@ -60,11 +60,11 @@ or
 
 There is also a function that wraps `EctoRepo.insert`, `update` and `insert_or_update`.
 
-**By `EctoCellar.insert_and_store/2`.**
-（Uses `EctoCellar.update_and_store/2` when updated.）
+**By `EctoCellar.insert_store/2`.**
+（Uses `EctoCellar.update_store/2` when updated.）
 
 ```elixir
-iex> case EctoCellar.insert_and_store(post) do # or insert_and_store/2, insert_or_update_and_store/2
+iex> case EctoCellar.insert_store(post) do # or insert_store/2, upsert_store/2
 ...>   {:ok, _post} -> # do_somesing
 ...>   error -> error
 ...> end

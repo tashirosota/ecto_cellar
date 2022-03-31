@@ -56,9 +56,9 @@ defmodule EctoCellar do
    - options: EctoCellar.options()
    - insert_opts: options for Ecto.Repo.insert/2
   """
-  @spec insert_and_store(Ecto.Schema.t() | Ecto.Changeset.t(), options, Keyword.t()) ::
+  @spec insert_store(Ecto.Schema.t() | Ecto.Changeset.t(), options, Keyword.t()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-  def insert_and_store(changeset, opts \\ [], insert_opts \\ []),
+  def insert_store(changeset, opts \\ [], insert_opts \\ []),
     do: do_wrap_func(changeset, opts, insert_opts, :insert)
 
   @doc """
@@ -66,9 +66,9 @@ defmodule EctoCellar do
    - options: EctoCellar.options()
    - update_opts: options for Ecto.Repo.update/2
   """
-  @spec update_and_store(Ecto.Changeset.t(), options, Keyword.t()) ::
+  @spec update_store(Ecto.Changeset.t(), options, Keyword.t()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-  def update_and_store(changeset, opts \\ [], update_opts \\ []),
+  def update_store(changeset, opts \\ [], update_opts \\ []),
     do: do_wrap_func(changeset, opts, update_opts, :update)
 
   @doc """
@@ -76,9 +76,9 @@ defmodule EctoCellar do
    - options: EctoCellar.options()
    - insert_or_update_opts: options for Ecto.Repo.insert_or_update/2
   """
-  @spec insert_or_update_and_store(Ecto.Changeset.t(), options, Keyword.t()) ::
+  @spec upsert_store(Ecto.Changeset.t(), options, Keyword.t()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-  def insert_or_update_and_store(changeset, opts \\ [], insert_or_update_opts \\ []),
+  def upsert_store(changeset, opts \\ [], insert_or_update_opts \\ []),
     do: do_wrap_func(changeset, opts, insert_or_update_opts, :insert_or_update)
 
   defp do_wrap_func(changeset, celler_opts, ecto_opts, func_atom) do
