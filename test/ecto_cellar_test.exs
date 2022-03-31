@@ -112,7 +112,7 @@ defmodule EctoCellarTest do
       assert {:ok, %Article{title: "title", views: 1}} =
                article
                |> Article.changeset(%{views: 1})
-               |> EctoCellar.insert_or_update_and_store(id_type: :uuid)
+               |> EctoCellar.insert_or_update_and_store()
     end
   end
 

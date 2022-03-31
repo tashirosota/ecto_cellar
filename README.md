@@ -94,7 +94,6 @@ iex> |> Repo.update() # Restored！！！
 **The last argument of each function accepts the following options.**
 
 - repo: You can select a repo other than the one specified in Config.
-- id_type: If the primary key is other than `id`, specify it.
 
 ## For contributers
 
