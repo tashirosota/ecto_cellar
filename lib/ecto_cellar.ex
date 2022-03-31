@@ -54,7 +54,7 @@ defmodule EctoCellar do
   @doc """
   Inserts given model（or changeset） and stores the changes at that time in the cellar.
    - options: EctoCellar.options()
-   - insert_or_update_opts: options for Ecto.Repo.insert/2
+   - insert_opts: options for Ecto.Repo.insert/2
   """
   @spec insert_and_store(Ecto.Schema.t() | Ecto.Changeset.t(), options, Keyword.t()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
@@ -64,7 +64,7 @@ defmodule EctoCellar do
   @doc """
   Updates given changeset and stores the changes at that time in the cellar.
    - options: EctoCellar.options()
-   - insert_or_update_opts: options for Ecto.Repo.update/2
+   - update_opts: options for Ecto.Repo.update/2
   """
   @spec update_and_store(Ecto.Changeset.t(), options, Keyword.t()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}

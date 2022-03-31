@@ -51,21 +51,23 @@ These are stored as recoverable versions for the versions table.
 
 ```elixir
 iex> with {:ok, post} <- %Post{title: "title", views: 0} |> @repo.insert(),
-iex>      {:ok, _post} <- EctoCellar.store(post) do # or store!/2
-iex>   # do something
-iex> end
+...>      {:ok, _post} <- EctoCellar.store(post) do # or store!/2
+...>   # do something
+...> end
 ```
 
 or
+
+There is also a function that wraps `EctoRepo.insert`, `update` and `insert_or_update`.
 
 **By `EctoCellar.insert_and_store/2`.**
 （Uses `EctoCellar.update_and_store/2` when updated.）
 
 ```elixir
 iex> case EctoCellar.insert_and_store(post) do # or store!/2
-iex>   {:ok, _post} -> # do_somesing
-iex>   error -> error
-iex> end
+...>   {:ok, _post} -> # do_somesing
+...>   error -> error
+...> end
 ```
 
 ### 4. Gets versions and can restore it.
