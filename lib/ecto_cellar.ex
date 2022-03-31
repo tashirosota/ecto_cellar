@@ -130,8 +130,15 @@ defmodule EctoCellar do
       Application.get_env(:ecto_cellar, :default_repo) || Application.get_env(:ecto_cellar, :repo)
 
   defp primary_key(%{__meta__: %{schema: schema}}) do
-    [primary_key] = schema.__schema__(:primary_key)
-    primary_key
+    primary_keyes = schema.__schema__(:primary_key)
+
+    if Enum.count(primary_keyes) == 1 do
+      [key] = primary_keyes
+      key
+    else
+      [key, _] = primary_keyes
+      key
+    end
   end
 
   defp repo(opts) when is_list(opts), do: opts[:repo] || EctoCellar.repo()

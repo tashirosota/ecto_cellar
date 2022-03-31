@@ -103,13 +103,13 @@ defmodule EctoCellarTest do
       assert {:ok, %Post{title: "title", views: 0} = post} =
                EctoCellar.insert_or_update_and_store(post)
 
-      assert {:ok, %Post{title: "title", views: 1} = post} =
+      assert {:ok, %Post{title: "title", views: 1}} =
                post |> Post.changeset(%{views: 1}) |> EctoCellar.insert_or_update_and_store()
 
       assert {:ok, %Article{title: "title", views: 0} = article} =
                EctoCellar.insert_or_update_and_store(article)
 
-      assert {:ok, %Article{title: "title", views: 1} = article} =
+      assert {:ok, %Article{title: "title", views: 1}} =
                article
                |> Article.changeset(%{views: 1})
                |> EctoCellar.insert_or_update_and_store(id_type: :uuid)
