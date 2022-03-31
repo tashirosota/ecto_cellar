@@ -4,7 +4,6 @@ defmodule EctoCellar do
   Handles versions table created by `mix ecto_cellar.gen`.
   You can use this module to store in the cellar and restore the version.
   ## Options
-
    - repo: You can select a repo other than the one specified in Config.
   """
 
