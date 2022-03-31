@@ -81,6 +81,16 @@ defmodule EctoCellar do
   def upsert_store(changeset, opts \\ [], insert_or_update_opts \\ []),
     do: do_wrap_func(changeset, opts, insert_or_update_opts, :insert_or_update)
 
+  @doc """
+  Deletes given changeset and stores the changes at that time in the cellar.
+   - options: EctoCellar.options()
+   - delete_opts: options for Ecto.Repo.update/2
+  """
+  @spec delete_store(Ecto.Schema.t() | Ecto.Changeset.t(), options, Keyword.t()) ::
+          {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+  def delete_store(changeset, opts \\ [], delete_opts \\ []),
+    do: do_wrap_func(changeset, opts, delete_opts, :delete)
+
   defp do_wrap_func(changeset, celler_opts, ecto_opts, func_atom) do
     Multi.new()
     |> Multi.run(:schema, fn _repo, _ ->
