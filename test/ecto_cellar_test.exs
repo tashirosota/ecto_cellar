@@ -15,7 +15,7 @@ defmodule EctoCellarTest do
     test "return {:ok, model}", %{post: post, article: article} do
       assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.store(post)
       assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.store(article, :uuid)
-      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.store(article, id_type: :uuid)
+      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.store(article)
     end
 
     test "return {:error, term}", %{post: post, article: article} do
@@ -66,8 +66,7 @@ defmodule EctoCellarTest do
     test "return {:ok, model}", %{post: post, article: article} do
       assert {:ok, %Post{title: "title", views: 0}} = EctoCellar.insert_and_store(post)
 
-      assert {:ok, %Article{title: "title", views: 0}} =
-               EctoCellar.insert_and_store(article, id_type: :uuid)
+      assert {:ok, %Article{title: "title", views: 0}} = EctoCellar.insert_and_store(article)
     end
   end
 
@@ -87,8 +86,7 @@ defmodule EctoCellarTest do
     test "return {:ok, model}", %{post: post, article: article} do
       assert {:ok, %Post{title: "title", views: 1}} = EctoCellar.update_and_store(post)
 
-      assert {:ok, %Article{title: "title", views: 1}} =
-               EctoCellar.update_and_store(article, id_type: :uuid)
+      assert {:ok, %Article{title: "title", views: 1}} = EctoCellar.update_and_store(article)
     end
   end
 
@@ -109,7 +107,7 @@ defmodule EctoCellarTest do
                post |> Post.changeset(%{views: 1}) |> EctoCellar.insert_or_update_and_store()
 
       assert {:ok, %Article{title: "title", views: 0} = article} =
-               EctoCellar.insert_or_update_and_store(article, id_type: :uuid)
+               EctoCellar.insert_or_update_and_store(article)
 
       assert {:ok, %Article{title: "title", views: 1} = article} =
                article
@@ -132,7 +130,7 @@ defmodule EctoCellarTest do
 
       0..10
       |> Enum.each(fn _ ->
-        {:ok, _} = EctoCellar.store(ctx[:article], id_type: :uuid)
+        {:ok, _} = EctoCellar.store(ctx[:article])
       end)
 
       :ok
@@ -141,7 +139,7 @@ defmodule EctoCellarTest do
     test "return models", %{post: post, article: article} do
       assert EctoCellar.all(post) |> Enum.count() >= 10
       assert EctoCellar.all(article, :uuid) |> Enum.count() >= 10
-      assert EctoCellar.all(article, id_type: :uuid) |> Enum.count() >= 10
+      assert EctoCellar.all(article) |> Enum.count() >= 10
     end
   end
 
@@ -174,8 +172,7 @@ defmodule EctoCellarTest do
 
       assert ^expected_article = EctoCellar.one(article, article.inserted_at, :uuid)
 
-      assert ^expected_article =
-               restored = EctoCellar.one(article, article.inserted_at, id_type: :uuid)
+      assert ^expected_article = restored = EctoCellar.one(article, article.inserted_at)
 
       assert {:ok, _} = restored |> Article.changeset(%{}) |> @repo.update()
     end

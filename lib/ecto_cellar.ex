@@ -3,11 +3,9 @@ defmodule EctoCellar do
   Core module for EctoCellar.
   Handles versions table created by `mix ecto_cellar.gen`.
   You can use this module to store in the cellar and restore the version.
-  For a model whose primary_key is other than `id`, specify `id_type` and use it.
-
   ## Options
-   - repo:　You can select a repo other than the one specified in Config.
-   - id_type: If the primary key is other than `id`, specify it.
+
+   - repo: You can select a repo other than the one specified in Config.
   """
 
   alias EctoCellar.Version
@@ -24,7 +22,7 @@ defmodule EctoCellar do
     Version.create(
       %{
         model_name: mod |> inspect(),
-        model_id: model_id(model, opts),
+        model_id: model_id(model),
         model_inserted_at: model.inserted_at,
         version: model |> cast_format_map |> Jason.encode!()
       },
@@ -44,7 +42,7 @@ defmodule EctoCellar do
     Version.create!(
       %{
         model_name: mod |> inspect(),
-        model_id: model_id(model, opts),
+        model_id: model_id(model),
         model_inserted_at: model.inserted_at,
         version: model |> cast_format_map |> Jason.encode!()
       },
@@ -108,7 +106,7 @@ defmodule EctoCellar do
     Version.one(
       mod |> inspect(),
       timestamp,
-      model |> Map.fetch!(id_type(opts)) |> to_string(),
+      model_id(model),
       repo(opts)
     )
     |> to_model(mod)
@@ -121,7 +119,7 @@ defmodule EctoCellar do
   def all(%mod{} = model, opts \\ []) do
     Version.all(
       mod |> inspect(),
-      model |> Map.fetch!(id_type(opts)) |> to_string(),
+      model_id(model),
       repo(opts)
     )
     |> to_models(mod)
@@ -132,14 +130,16 @@ defmodule EctoCellar do
     do:
       Application.get_env(:ecto_cellar, :default_repo) || Application.get_env(:ecto_cellar, :repo)
 
-  defp id_type(opts) when is_list(opts), do: opts[:id_type] || :id
-  defp id_type(opts), do: opts
+  defp primary_key(%{__meta__: %{schema: schema}}) do
+    [primary_key] = schema.__schema__(:primary_key)
+    primary_key
+  end
 
   defp repo(opts) when is_list(opts), do: opts[:repo] || EctoCellar.repo()
   defp repo(_), do: EctoCellar.repo()
 
-  defp model_id(model, opts) do
-    if id = Map.fetch!(model, id_type(opts)), do: to_string(id)
+  defp model_id(model) do
+    if id = Map.fetch!(model, primary_key(model)), do: to_string(id)
   end
 
   defp to_models(versions, mod) do
