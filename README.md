@@ -82,9 +82,9 @@ iex> post = Post.find(id)
 iex> post_versions = EctoCellar.all(post) # Can get all versions.
 [%Post{id: 1, body: "body3"...etc}, %Post{id: 1, body: "body2"...etc}, %Post{id: 1, body: "body1"...etc}]
 
-iex> version_1_inserted_at = ~N[2022/12/12 12:00:12]
+iex> version_1_inserted_at = ~N[2022-12-12 12:00:12]
 iex> post_version1 = EctoCellar.one(post, version_1_inserted_at)
-%Post{id: 1, body: "body1", inserted_at: ~N[2022/12/12 12:00:12]...etc}
+%Post{id: 1, body: "body1", inserted_at: ~N[2022-12-12 12:00:12]...etc}
 
 iex> post_version1
 iex> |> Post.changeset([])
